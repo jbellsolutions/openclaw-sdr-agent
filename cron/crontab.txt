@@ -1,0 +1,28 @@
+# OpenClaw SDR Team — Cron Schedules
+# All times in America/New_York (ET)
+# Adjust TZ= to your timezone
+
+# Prospector — 6 AM ET daily (pull + score + verify leads)
+TZ=America/New_York
+0 6 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/prospector "Pull today's leads, score A/B/C, verify emails, output to leads/today.json"
+
+# Email SDR — 8 AM ET daily (first-touch emails)
+0 8 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/email-sdr "Read leads/today.json, research prospects, generate personalized first-touch emails with A/B subject lines, push to Instantly"
+
+# Email SDR — 10 AM ET daily (follow-up batch)
+0 10 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/email-sdr "Send follow-up emails for Day 2, Day 4, Day 7 sequences"
+
+# Phone SDR — 10 AM to 12 PM ET daily (outbound calls to A-leads)
+0 10 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/phone-sdr "Call A-leads from yesterday. Prioritize warm leads who opened emails. Log all outcomes."
+
+# Text SDR — 12 PM ET daily (SMS follow-ups)
+0 12 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/text-sdr "Send SMS to A+B leads who haven't replied to email (Day 3, Day 7). Handle replies."
+
+# Sequence Manager — Every 2 hours during business hours (orchestration)
+0 8,10,12,14,16 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Deduplicate, update CRM, check for hot leads, monitor speed-to-lead triggers"
+
+# Sequence Manager — 5 PM ET daily (daily report)
+0 17 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Generate daily SDR report. Post to Slack #sdr. Check for hot leads to hand off."
+
+# Sequence Manager — Friday 6 PM ET (weekly self-improvement)
+0 18 * * 5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Weekly self-improvement: analyze A/B results, update SOUL.md files, log improvements, report to Co-Founder"
