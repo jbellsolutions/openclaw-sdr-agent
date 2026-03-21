@@ -1,6 +1,6 @@
 # Email Templates — Starter Set for A/B Testing
 
-These are starting templates. The Email SDR agent will personalize each one and the weekly self-improvement loop will evolve them based on what converts.
+These are starting templates. The Email SDR agent will personalize each one via Smartlead MCP and the weekly self-improvement loop will evolve them based on what converts.
 
 ## First Touch — Variant A (Pain Point Lead)
 

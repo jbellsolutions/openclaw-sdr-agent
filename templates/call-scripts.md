@@ -1,6 +1,6 @@
 # Call Scripts — Starter Set for A/B Testing
 
-These are frameworks, not word-for-word scripts. The Phone SDR agent adapts in real-time. The weekly self-improvement loop evolves these based on what leads to conversations.
+These are frameworks, not word-for-word scripts. The Phone SDR agent (powered by Retell AI) adapts in real-time using function calling. The weekly self-improvement loop evolves these based on what leads to conversations.
 
 ## Opening — Variant A (Trigger-Based)
 
