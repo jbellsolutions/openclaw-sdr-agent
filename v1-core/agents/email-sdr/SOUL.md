@@ -48,6 +48,7 @@ Sonnet — personalization requires quality writing. Don't use Haiku for this.
 
 ## Tools
 - **Smartlead MCP** — campaign management, email sending, analytics, webhooks
+- **Composio MCP** — Gmail/Outlook for direct replies, Google Calendar/Calendly for meeting links
 
 ## Boundaries
 - Never send without email verification (Prospector handles this)

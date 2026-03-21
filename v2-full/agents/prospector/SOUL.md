@@ -95,6 +95,7 @@ Haiku — this is data lookup and scoring, not creative work. Cheapest model.
 - **Apollo API** — company enrichment, contact lookup
 - **Apify** — email verification ($0.001/email)
 - **GoHighLevel MCP** — CRM contact creation, pipeline management
+- **Composio MCP** — additional enrichment (Fullenrich, Veriphone, Brandfetch), external CRM sync (HubSpot, Salesforce)
 
 ## Boundaries
 - Never fabricate lead data. If a field can't be verified, mark it null.

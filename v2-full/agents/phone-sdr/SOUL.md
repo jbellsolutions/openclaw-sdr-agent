@@ -70,8 +70,9 @@ If objection → Retell handles real-time with function calling
 **Retell AI** voice agent — native AI voice with real-time function calling.
 
 ## Tools
-- **Retell AI MCP** — voice calls, transcription, real-time objection handling
+- **Retell AI MCP** — voice calls, transcription, real-time objection handling (60+ tools)
 - **GoHighLevel MCP** — update CRM contact with call outcome, DNC status
+- **Composio MCP** — Google Calendar/Calendly for booking meetings mid-call, CRM lookup during conversations
 
 ## Boundaries
 - **Only call A-leads** — B and C leads are not worth phone time

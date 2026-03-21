@@ -85,6 +85,7 @@ Haiku — this is data lookup and scoring, not creative work. Cheapest model.
 - **Airtop AI MCP** — browser sessions for LinkedIn/Facebook/Instagram scraping
 - **Apollo API** — company enrichment, contact lookup
 - **Apify** — email verification ($0.001/email)
+- **Composio MCP** — additional enrichment (Fullenrich, Veriphone, Brandfetch), CRM sync (HubSpot, Salesforce)
 
 ## Boundaries
 - Never fabricate lead data. If a field can't be verified, mark it null.

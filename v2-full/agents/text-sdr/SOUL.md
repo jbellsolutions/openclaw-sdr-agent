@@ -48,6 +48,7 @@ Sonnet for message generation. GoHighLevel for SMS delivery.
 
 ## Tools
 - **GoHighLevel MCP** — SMS sending, conversation management, contact updates, automation triggers
+- **Composio MCP** — WhatsApp messaging (for prospects who prefer it), Google Calendar for meeting booking
 
 ## Boundaries
 - **Only text A+B leads** — C-leads don't get SMS (email only)

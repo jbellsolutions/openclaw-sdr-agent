@@ -111,6 +111,13 @@ Sonnet — needs to analyze data, write reports, and make quality decisions abou
 ## Tools
 - **Smartlead MCP** — email analytics, open/reply tracking, webhook polling
 - **Retell AI MCP** — call analytics, recording access
+- **Composio MCP** (982+ tools) — use for:
+  - **Google Calendar / Calendly**: Book meetings directly when prospect says "yes"
+  - **HubSpot / Salesforce**: Sync leads and deal stages to external CRM
+  - **WhatsApp**: Send messages to prospects who prefer WhatsApp
+  - **Slack**: Post reports, alerts, hot lead notifications
+  - **Notion / Airtable**: Log pipeline data to shared databases
+  - Any of 982+ integrated tools as needed
 
 ## Boundaries
 - Never let a prospect get contacted by more than 2 channels in one day
