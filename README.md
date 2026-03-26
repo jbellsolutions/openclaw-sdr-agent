@@ -1,6 +1,6 @@
 # OpenClaw AI SDR Team
 
-> 4-5 agent AI SDR system that books 25-50 meetings/month at $4-8 per meeting. Self-improving via Karpathy autoresearch loop. Event-driven. Priority-scored. Composio-powered.
+> 4-5 agent AI SDR system that books 30-60 meetings/month at $5-11 per meeting. Self-improving via Karpathy autoresearch loop. Event-driven. Priority-scored. Composio-powered.
 
 ---
 
@@ -25,16 +25,16 @@ cp -r v1-core/agents/ ~/openclaw-workspace/agents/
 crontab v1-core/cron/crontab.txt
 ```
 
-### v2 Full — Multi-Channel + CRM (Email + Phone + SMS)
+### v2 Full — Multi-Channel + CRM (Email + Phone + iMessage/SMS)
 
-**Best for**: Full multi-channel outreach with a real CRM dashboard.
+**Best for**: Full multi-channel outreach with iMessage blue bubbles and a real CRM dashboard.
 
 - **5 agents** — Everything in v1, plus Text SDR
-- **SMS via GoHighLevel** — Day 3 + Day 7 follow-ups to A+B leads
+- **iMessage/SMS/RCS via Sendblue** — Blue bubbles, read receipts, typing indicators. SMS/RCS fallback for Android.
 - **GoHighLevel CRM** — visual pipeline, unified inbox, automation workflows
 - **~$285/month**
 
-**Use v2 if**: You have GoHighLevel, want SMS as a channel, and want a visual CRM dashboard instead of JSON files.
+**Use v2 if**: You want the highest-converting messaging channel (iMessage), a visual CRM, and full multi-channel coverage.
 
 ```bash
 # Deploy v2
@@ -46,11 +46,11 @@ crontab v2-full/cron/crontab.txt
 
 | | v1 Core | v2 Full |
 |---|---------|---------|
-| **Agents** | 4 (no SMS) | 5 (with SMS) |
+| **Agents** | 4 (no messaging) | 5 (with iMessage/SMS) |
 | **Email** | Smartlead MCP | Smartlead MCP |
 | **Prospecting** | Airtop AI (LinkedIn, FB, IG) | Airtop AI (LinkedIn, FB, IG) |
 | **Phone** | Retell AI | Retell AI |
-| **SMS** | -- | GoHighLevel |
+| **Messaging** | -- | Sendblue (iMessage → SMS/RCS fallback) |
 | **CRM** | JSON files | GoHighLevel + JSON files |
 | **Integration layer** | Composio (982+ tools) | Composio (982+ tools) |
 | **Monthly cost** | ~$185 | ~$285 |
@@ -93,7 +93,7 @@ Email SDR → sequences/email/{id}.json → Smartlead MCP → GHL CRM
     ↓ (opens/clicks → trigger Phone SDR immediately for A-leads)
 Phone SDR → calls/YYYY-MM-DD/{id}.json → Retell AI → GHL CRM
     ↓ (non-responders)
-Text SDR → sms/YYYY-MM-DD/{id}.json → GoHighLevel SMS (A+B leads)
+Text SDR → sms/YYYY-MM-DD/{id}.json → Sendblue iMessage/SMS/RCS (A+B leads)
     ↓
 Sequence Manager → GHL CRM (pipeline) → Slack #sdr → DM owner (hot leads)
     ↓ (weekly)
@@ -181,14 +181,14 @@ With Composio, your agents can:
 
 | Agent | Model | Channel | Tools | Trigger |
 |-------|-------|---------|-------|---------|
-| **Text SDR** | Sonnet | SMS | GoHighLevel MCP, Composio | Cron 12 PM ET |
-| *Sequence Manager* | *Sonnet* | *+ GHL CRM* | *+ GoHighLevel MCP* | *Same* |
+| **Text SDR** | Sonnet | iMessage/SMS/RCS | Sendblue API, GHL MCP, Composio | Cron 12 PM ET |
+| *Sequence Manager* | *Sonnet* | *+ GHL CRM + Sendblue* | *+ GoHighLevel MCP, Sendblue API* | *Same* |
 
 ---
 
 ## Key Innovations
 
-1. **Priority scoring (A/B/C)** — A-leads get phone+email (+SMS in v2). B-leads get email (+SMS in v2). C-leads get email only. Cuts cost per meeting by 40%.
+1. **Priority scoring (A/B/C)** — A-leads get phone+email (+iMessage/SMS in v2). B-leads get email (+iMessage/SMS in v2). C-leads get email only. Cuts cost per meeting by 40%.
 
 2. **Speed-to-lead** — When an A-lead opens your email, Retell AI calls within 5 minutes. 10x higher connect rate.
 
@@ -211,7 +211,8 @@ With Composio, your agents can:
 | **Email outreach** | [Smartlead](https://smartlead.ai) | [MCP server](https://github.com/LeadMagic/smartlead-mcp-server) (116+ tools) | Campaigns, warmup, analytics |
 | **Social prospecting** | [Airtop AI](https://airtop.ai) | [MCP server](https://github.com/alecf/airtop-mcp) | LinkedIn, FB, IG browser automation |
 | **AI phone calls** | [Retell AI](https://retellai.com) | [MCP server](https://github.com/sunnysingh100/retell-mcp-server) (60+ tools) | Voice agent, transcription, objections |
-| **SMS + CRM** (v2) | [GoHighLevel](https://gohighlevel.com) | [MCP server](https://github.com/mastanley13/GoHighLevel-MCP) (269+ tools) | SMS, CRM, pipeline, automation |
+| **iMessage/SMS/RCS** (v2) | [Sendblue](https://sendblue.com) | [REST API](https://docs.sendblue.com/api-v2) | iMessage blue bubbles, read receipts, SMS/RCS fallback |
+| **CRM + pipeline** (v2) | [GoHighLevel](https://gohighlevel.com) | [MCP server](https://github.com/mastanley13/GoHighLevel-MCP) (269+ tools) | CRM, pipeline, automation, unified inbox |
 | **Integration layer** | [Composio](https://composio.dev) | [MCP server](https://docs.composio.dev/docs/mcp/overview) (982+ tools) | CRM, calendar, messaging, enrichment |
 | **Lead enrichment** | [Apollo](https://apollo.io) | API | Contact data, company info |
 | **Email verification** | [Apify](https://apify.com) | Actor | $0.001/email verification |
@@ -229,14 +230,16 @@ With Composio, your agents can:
 | C-leads (email only) | 60 | 2% | 26 |
 | **Combined** | **200** | | **~198 warm → 20-40 meetings** |
 
-### v2 Full (Email + Phone + SMS)
+### v2 Full (Email + Phone + iMessage/SMS)
 
 | Channel | Prospects/Day | Conversion | Warm Leads/Month |
 |---------|--------------|------------|-----------------|
-| A-leads (email+phone+SMS) | 40 | 15% | 132 |
-| B-leads (email+SMS) | 100 | 5% | 110 |
+| A-leads (email+phone+iMessage) | 40 | 18% | 158 |
+| B-leads (email+iMessage/SMS) | 100 | 6% | 132 |
 | C-leads (email only) | 60 | 2% | 26 |
-| **Combined** | **200** | | **~268 warm → 25-50 meetings** |
+| **Combined** | **200** | | **~316 warm → 30-60 meetings** |
+
+*iMessage delivers ~90% open rates vs ~20% for SMS. Blue bubbles + read receipts + typing indicators = significantly higher engagement than traditional SMS.*
 
 ---
 
@@ -261,11 +264,12 @@ With Composio, your agents can:
 | Orgo VM (SDR agents) | $37 |
 | Smartlead (email campaigns) | ~$39-94 |
 | Retell AI (voice calls, ~500 min) | ~$35-65 |
-| GoHighLevel (SMS + CRM) | ~$97 |
+| Sendblue (iMessage/SMS, ~2K messages) | ~$50-100 |
+| GoHighLevel (CRM + pipeline) | ~$97 |
 | Apollo/Apify (lead data + verification) | ~$50 |
 | Airtop AI (browser sessions) | ~$0-20 |
 | Composio (integration layer) | Free tier / ~$29+ |
-| **Total** | **~$287-392** |
+| **Total** | **~$337-442** |
 
 ---
 
@@ -277,7 +281,8 @@ With Composio, your agents can:
 2. [Orgo](https://orgo.ai) VM (8GB RAM recommended)
 3. API keys for: Smartlead, Retell AI, Airtop AI, Apollo/Apify
 4. Composio account (free tier available)
-5. *(v2 only)* GoHighLevel account with Private Integration API key
+5. *(v2 only)* Sendblue account with API key (`sb-api-key-id` + `sb-api-secret-key`)
+6. *(v2 only)* GoHighLevel account with Private Integration API key
 
 ### Step-by-Step: Deploy v1 Core
 
@@ -334,33 +339,36 @@ mkdir -p ~/openclaw-workspace/{leads,calls,sequences,sms,crm,improvements,pipeli
 
 # Step 5: Same MCP servers as v1, PLUS:
 #    - GoHighLevel MCP (clone https://github.com/mastanley13/GoHighLevel-MCP)
+#    - Sendblue API (REST — no MCP server needed, agents call directly)
 
 # Step 6: Same as v1, PLUS:
-#    agents/text-sdr/SOUL.md         → GHL Private Integration API key
-#    agents/sequence-manager/SOUL.md  → GHL API key (for CRM sync)
+#    agents/text-sdr/SOUL.md         → Sendblue API keys (sb-api-key-id + sb-api-secret-key)
+#    agents/text-sdr/SOUL.md         → GHL API key (for CRM logging)
+#    agents/sequence-manager/SOUL.md  → GHL API key + Sendblue keys
 
 # Step 7: Use v2 cron
 crontab v2-full/cron/crontab.txt
 
 # Step 8-9: Same validation as v1, PLUS:
+#    - Check Sendblue dashboard for iMessage/SMS delivery
 #    - Check GHL dashboard for contacts and pipeline
-#    - Check GHL conversations for SMS threads
+#    - Verify iMessage detection working (test with iPhone + Android numbers)
 ```
 
 ### Upgrading v1 → v2
 
-Already running v1 and want to add SMS + CRM? Simple:
+Already running v1 and want to add iMessage/SMS + CRM? Simple:
 
 ```bash
-# 1. Copy v2 agents (overwrites v1 agents with GHL-aware versions)
+# 1. Copy v2 agents (overwrites v1 agents with Sendblue+GHL-aware versions)
 cp -r v2-full/agents/ ~/openclaw-workspace/agents/
 
 # 2. Create SMS directory
 mkdir -p ~/openclaw-workspace/sms
 
-# 3. Set up GoHighLevel MCP server
+# 3. Set up Sendblue API keys and GoHighLevel MCP server
 
-# 4. Configure GHL API keys in SOUL.md files
+# 4. Configure API keys in SOUL.md files
 
 # 5. Update cron
 crontab v2-full/cron/crontab.txt
@@ -368,7 +376,7 @@ crontab v2-full/cron/crontab.txt
 # 6. Import existing crm/prospects.json into GHL as contacts
 ```
 
-Your existing leads, sequences, and improvement history carry over — v2 just adds the SMS channel and GHL CRM on top.
+Your existing leads, sequences, and improvement history carry over — v2 adds iMessage/SMS via Sendblue and GHL CRM on top.
 
 ---
 
@@ -412,8 +420,8 @@ openclaw-sdr-agent/
 │   │   ├── prospector/SOUL.md              # + GHL CRM sync
 │   │   ├── email-sdr/SOUL.md               # + GHL activity logging
 │   │   ├── phone-sdr/SOUL.md               # + GHL call logging
-│   │   ├── text-sdr/SOUL.md                # GoHighLevel SMS
-│   │   └── sequence-manager/SOUL.md        # + GHL CRM as primary
+│   │   ├── text-sdr/SOUL.md                # Sendblue iMessage/SMS/RCS
+│   │   └── sequence-manager/SOUL.md        # + GHL CRM + Sendblue analytics
 │   └── cron/crontab.txt
 ├── templates/                        # Shared across both versions
 │   ├── icp-scoring.md                      # ICP qualification rubric
@@ -434,8 +442,9 @@ openclaw-sdr-agent/
 | [Smartlead](https://smartlead.ai) | Cold email campaigns + analytics | 116+ |
 | [Airtop AI](https://airtop.ai) | Browser automation for LinkedIn/FB/IG | 5+ |
 | [Retell AI](https://retellai.com) | AI voice agent for outbound calls | 60+ |
+| [Sendblue](https://sendblue.com) | iMessage/SMS/RCS messaging (v2) | REST API |
 | [Composio](https://composio.dev) | Integration layer (CRM, calendar, messaging) | 982+ |
-| [GoHighLevel](https://gohighlevel.com) | SMS + CRM + pipeline (v2 only) | 269+ |
+| [GoHighLevel](https://gohighlevel.com) | CRM + pipeline (v2 only) | 269+ |
 | [Apollo](https://apollo.io) | Lead enrichment + contact data | API |
 | [Apify](https://apify.com) | Email verification | Actor |
 | [Clawdi AI](https://www.clawdi.ai/) | Reference: managed OpenClaw + Composio | -- |
