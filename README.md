@@ -30,11 +30,12 @@ crontab v1-core/cron/crontab.txt
 **Best for**: Full multi-channel outreach with iMessage blue bubbles and a real CRM dashboard.
 
 - **5 agents** — Everything in v1, plus Text SDR
-- **iMessage/SMS/RCS via Sendblue** — Blue bubbles, read receipts, typing indicators. SMS/RCS fallback for Android.
+- **Outbound SMS via CallHub** — peer-to-peer texting, toll-free/800 numbers, DNC management
+- **Inbound replies via Sendblue** — iMessage blue bubbles, read receipts, typing indicators, conversational threading
 - **GoHighLevel CRM** — visual pipeline, unified inbox, automation workflows
 - **~$285/month**
 
-**Use v2 if**: You want the highest-converting messaging channel (iMessage), a visual CRM, and full multi-channel coverage.
+**Use v2 if**: You want outbound calls+SMS via CallHub, iMessage inbound handling via Sendblue, a visual CRM, and full multi-channel coverage.
 
 ```bash
 # Deploy v2
@@ -50,7 +51,8 @@ crontab v2-full/cron/crontab.txt
 | **Email** | Smartlead MCP | Smartlead MCP |
 | **Prospecting** | Airtop AI (LinkedIn, FB, IG) | Airtop AI (LinkedIn, FB, IG) |
 | **Phone** | Retell AI | Retell AI |
-| **Messaging** | -- | Sendblue (iMessage → SMS/RCS fallback) |
+| **Outbound SMS** | -- | CallHub (peer-to-peer texting, 800 numbers) |
+| **Inbound replies** | -- | Sendblue (iMessage, read receipts, threading) |
 | **CRM** | JSON files | GoHighLevel + JSON files |
 | **Integration layer** | Composio (982+ tools) | Composio (982+ tools) |
 | **Monthly cost** | ~$185 | ~$285 |
@@ -93,7 +95,7 @@ Email SDR → sequences/email/{id}.json → Smartlead MCP → GHL CRM
     ↓ (opens/clicks → trigger Phone SDR immediately for A-leads)
 Phone SDR → calls/YYYY-MM-DD/{id}.json → Retell AI → GHL CRM
     ↓ (non-responders)
-Text SDR → sms/YYYY-MM-DD/{id}.json → Sendblue iMessage/SMS/RCS (A+B leads)
+Text SDR → sms/YYYY-MM-DD/{id}.json → CallHub outbound + Sendblue inbound (A+B leads)
     ↓
 Sequence Manager → GHL CRM (pipeline) → Slack #sdr → DM owner (hot leads)
     ↓ (weekly)
@@ -181,8 +183,8 @@ With Composio, your agents can:
 
 | Agent | Model | Channel | Tools | Trigger |
 |-------|-------|---------|-------|---------|
-| **Text SDR** | Sonnet | iMessage/SMS/RCS | Sendblue API, GHL MCP, Composio | Cron 12 PM ET |
-| *Sequence Manager* | *Sonnet* | *+ GHL CRM + Sendblue* | *+ GoHighLevel MCP, Sendblue API* | *Same* |
+| **Text SDR** | Sonnet | SMS out / iMessage in | CallHub API, Sendblue API, GHL MCP, Composio | Cron 12 PM ET |
+| *Sequence Manager* | *Sonnet* | *+ GHL CRM* | *+ GoHighLevel MCP, CallHub API, Sendblue API* | *Same* |
 
 ---
 
@@ -211,7 +213,8 @@ With Composio, your agents can:
 | **Email outreach** | [Smartlead](https://smartlead.ai) | [MCP server](https://github.com/LeadMagic/smartlead-mcp-server) (116+ tools) | Campaigns, warmup, analytics |
 | **Social prospecting** | [Airtop AI](https://airtop.ai) | [MCP server](https://github.com/alecf/airtop-mcp) | LinkedIn, FB, IG browser automation |
 | **AI phone calls** | [Retell AI](https://retellai.com) | [MCP server](https://github.com/sunnysingh100/retell-mcp-server) (60+ tools) | Voice agent, transcription, objections |
-| **iMessage/SMS/RCS** (v2) | [Sendblue](https://sendblue.com) | [REST API](https://docs.sendblue.com/api-v2) | iMessage blue bubbles, read receipts, SMS/RCS fallback |
+| **Outbound calls + SMS** (v2) | [CallHub](https://callhub.io) | [REST API](https://developer.callhub.io/) | Voice broadcasting, peer-to-peer texting, DNC, 800 numbers |
+| **Inbound replies** (v2) | [Sendblue](https://sendblue.com) | [REST API](https://docs.sendblue.com/api-v2) | iMessage blue bubbles, read receipts, conversational threading |
 | **CRM + pipeline** (v2) | [GoHighLevel](https://gohighlevel.com) | [MCP server](https://github.com/mastanley13/GoHighLevel-MCP) (269+ tools) | CRM, pipeline, automation, unified inbox |
 | **Integration layer** | [Composio](https://composio.dev) | [MCP server](https://docs.composio.dev/docs/mcp/overview) (982+ tools) | CRM, calendar, messaging, enrichment |
 | **Lead enrichment** | [Apollo](https://apollo.io) | API | Contact data, company info |
@@ -234,8 +237,8 @@ With Composio, your agents can:
 
 | Channel | Prospects/Day | Conversion | Warm Leads/Month |
 |---------|--------------|------------|-----------------|
-| A-leads (email+phone+iMessage) | 40 | 18% | 158 |
-| B-leads (email+iMessage/SMS) | 100 | 6% | 132 |
+| A-leads (email+phone+SMS+iMessage) | 40 | 18% | 158 |
+| B-leads (email+SMS+iMessage) | 100 | 6% | 132 |
 | C-leads (email only) | 60 | 2% | 26 |
 | **Combined** | **200** | | **~316 warm → 30-60 meetings** |
 
@@ -264,7 +267,8 @@ With Composio, your agents can:
 | Orgo VM (SDR agents) | $37 |
 | Smartlead (email campaigns) | ~$39-94 |
 | Retell AI (voice calls, ~500 min) | ~$35-65 |
-| Sendblue (iMessage/SMS, ~2K messages) | ~$50-100 |
+| CallHub (outbound calls + SMS) | ~$50-100 |
+| Sendblue (inbound reply handling) | ~$25-50 |
 | GoHighLevel (CRM + pipeline) | ~$97 |
 | Apollo/Apify (lead data + verification) | ~$50 |
 | Airtop AI (browser sessions) | ~$0-20 |
@@ -281,8 +285,9 @@ With Composio, your agents can:
 2. [Orgo](https://orgo.ai) VM (8GB RAM recommended)
 3. API keys for: Smartlead, Retell AI, Airtop AI, Apollo/Apify
 4. Composio account (free tier available)
-5. *(v2 only)* Sendblue account with API key (`sb-api-key-id` + `sb-api-secret-key`)
-6. *(v2 only)* GoHighLevel account with Private Integration API key
+5. *(v2 only)* CallHub account with API key (outbound calls + SMS)
+6. *(v2 only)* Sendblue account with API key (`sb-api-key-id` + `sb-api-secret-key`) — inbound replies
+7. *(v2 only)* GoHighLevel account with Private Integration API key
 
 ### Step-by-Step: Deploy v1 Core
 
@@ -339,20 +344,23 @@ mkdir -p ~/openclaw-workspace/{leads,calls,sequences,sms,crm,improvements,pipeli
 
 # Step 5: Same MCP servers as v1, PLUS:
 #    - GoHighLevel MCP (clone https://github.com/mastanley13/GoHighLevel-MCP)
-#    - Sendblue API (REST — no MCP server needed, agents call directly)
+#    - CallHub API (REST — outbound calls + SMS)
+#    - Sendblue API (REST — inbound reply handling)
 
 # Step 6: Same as v1, PLUS:
-#    agents/text-sdr/SOUL.md         → Sendblue API keys (sb-api-key-id + sb-api-secret-key)
+#    agents/phone-sdr/SOUL.md        → CallHub API key (outbound calls)
+#    agents/text-sdr/SOUL.md         → CallHub API key (outbound SMS)
+#    agents/text-sdr/SOUL.md         → Sendblue API keys (inbound replies)
 #    agents/text-sdr/SOUL.md         → GHL API key (for CRM logging)
-#    agents/sequence-manager/SOUL.md  → GHL API key + Sendblue keys
+#    agents/sequence-manager/SOUL.md  → GHL + CallHub + Sendblue keys
 
 # Step 7: Use v2 cron
 crontab v2-full/cron/crontab.txt
 
 # Step 8-9: Same validation as v1, PLUS:
-#    - Check Sendblue dashboard for iMessage/SMS delivery
+#    - Check CallHub dashboard for outbound call/SMS delivery
+#    - Check Sendblue dashboard for inbound reply handling
 #    - Check GHL dashboard for contacts and pipeline
-#    - Verify iMessage detection working (test with iPhone + Android numbers)
 ```
 
 ### Upgrading v1 → v2
@@ -360,13 +368,13 @@ crontab v2-full/cron/crontab.txt
 Already running v1 and want to add iMessage/SMS + CRM? Simple:
 
 ```bash
-# 1. Copy v2 agents (overwrites v1 agents with Sendblue+GHL-aware versions)
+# 1. Copy v2 agents (overwrites v1 agents with CallHub+Sendblue+GHL-aware versions)
 cp -r v2-full/agents/ ~/openclaw-workspace/agents/
 
 # 2. Create SMS directory
 mkdir -p ~/openclaw-workspace/sms
 
-# 3. Set up Sendblue API keys and GoHighLevel MCP server
+# 3. Set up CallHub API key, Sendblue API keys, and GoHighLevel MCP server
 
 # 4. Configure API keys in SOUL.md files
 
@@ -376,7 +384,7 @@ crontab v2-full/cron/crontab.txt
 # 6. Import existing crm/prospects.json into GHL as contacts
 ```
 
-Your existing leads, sequences, and improvement history carry over — v2 adds iMessage/SMS via Sendblue and GHL CRM on top.
+Your existing leads, sequences, and improvement history carry over — v2 adds outbound calls+SMS via CallHub, inbound reply handling via Sendblue, and GHL CRM on top.
 
 ---
 
@@ -420,8 +428,8 @@ openclaw-sdr-agent/
 │   │   ├── prospector/SOUL.md              # + GHL CRM sync
 │   │   ├── email-sdr/SOUL.md               # + GHL activity logging
 │   │   ├── phone-sdr/SOUL.md               # + GHL call logging
-│   │   ├── text-sdr/SOUL.md                # Sendblue iMessage/SMS/RCS
-│   │   └── sequence-manager/SOUL.md        # + GHL CRM + Sendblue analytics
+│   │   ├── text-sdr/SOUL.md                # CallHub outbound + Sendblue inbound
+│   │   └── sequence-manager/SOUL.md        # + GHL CRM + CallHub + Sendblue
 │   └── cron/crontab.txt
 ├── templates/                        # Shared across both versions
 │   ├── icp-scoring.md                      # ICP qualification rubric
@@ -442,7 +450,8 @@ openclaw-sdr-agent/
 | [Smartlead](https://smartlead.ai) | Cold email campaigns + analytics | 116+ |
 | [Airtop AI](https://airtop.ai) | Browser automation for LinkedIn/FB/IG | 5+ |
 | [Retell AI](https://retellai.com) | AI voice agent for outbound calls | 60+ |
-| [Sendblue](https://sendblue.com) | iMessage/SMS/RCS messaging (v2) | REST API |
+| [CallHub](https://callhub.io) | Outbound calls + SMS (v2) | REST API |
+| [Sendblue](https://sendblue.com) | Inbound iMessage/SMS replies (v2) | REST API |
 | [Composio](https://composio.dev) | Integration layer (CRM, calendar, messaging) | 982+ |
 | [GoHighLevel](https://gohighlevel.com) | CRM + pipeline (v2 only) | 269+ |
 | [Apollo](https://apollo.io) | Lead enrichment + contact data | API |

@@ -26,13 +26,20 @@ GHL serves as the visual CRM dashboard:
 - **Dashboard**: Real-time metrics visible to Justin without needing Slack reports
 - Use GHL MCP (269+ tools) for all CRM operations
 
-### Sendblue Messaging Layer
-Text SDR uses Sendblue for iMessage/SMS/RCS (not GHL SMS):
-- **iMessage first**: Blue bubbles, read receipts, typing indicators → 90%+ open rate
-- **SMS/RCS fallback**: For non-Apple devices, same API
-- **Channel detection**: `evaluate-service` endpoint tells you which channel to use
+### CallHub — Outbound Calls + SMS
+CallHub handles all outbound communication:
+- **Voice campaigns**: Outbound calls via voice broadcasting or call center
+- **SMS campaigns**: Peer-to-peer texting for Day 3/Day 7 follow-ups
+- **DNC management**: Built-in Do Not Call list enforcement
+- **Number management**: Toll-free/800 numbers for outbound
+
+### Sendblue — Inbound Reply Handling
+Sendblue handles all inbound replies from prospects:
+- **iMessage replies**: Blue bubbles, read receipts, typing indicators — feels human
+- **SMS replies**: Standard inbound SMS handling
 - **Read receipt data**: Know exactly when prospects read messages — use for timing follow-ups
 - **Tapback reactions**: Treat as warm engagement signals
+- **Conversational threading**: Full reply history per prospect
 
 ### Daily Report (5 PM ET)
 Post to Slack #sdr AND update GHL dashboard:
@@ -143,7 +150,8 @@ Sonnet — needs to analyze data, write reports, and make quality decisions abou
 - **Smartlead MCP** — email analytics, open/reply tracking, webhook polling
 - **Retell AI MCP** — call analytics, recording access
 - **GoHighLevel MCP** — CRM operations, contact management, pipeline, conversations
-- **Sendblue API** — iMessage/SMS analytics, read receipt tracking, delivery status
+- **CallHub API** — outbound call/SMS campaign analytics, DNC management, contact lists
+- **Sendblue API** — inbound reply handling, iMessage read receipts, delivery status
 - **Composio MCP** (982+ tools) — use for:
   - **Google Calendar / Calendly**: Book meetings directly when prospect says "yes"
   - **HubSpot / Salesforce**: Sync leads to external CRM alongside GHL

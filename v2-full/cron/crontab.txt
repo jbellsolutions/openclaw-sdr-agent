@@ -1,6 +1,6 @@
 # OpenClaw SDR Team v2 (Full) — Cron Schedules
 # 5 agents: Prospector, Email SDR, Phone SDR, Text SDR, Sequence Manager
-# Tools: Smartlead + Airtop AI + Retell AI + Sendblue (iMessage/SMS/RCS) + GoHighLevel (CRM)
+# Tools: Smartlead + Airtop AI + CallHub (calls + outbound SMS) + Retell AI + Sendblue (inbound) + GoHighLevel (CRM)
 # All times in America/New_York (ET)
 
 # Prospector — 6 AM ET daily (pull + score + verify leads via Airtop AI + Apollo + GHL CRM)
@@ -13,17 +13,17 @@ TZ=America/New_York
 # Email SDR — 10 AM ET daily (follow-up batch via Smartlead)
 0 10 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/email-sdr "Send follow-up emails for Day 2, Day 4, Day 7 sequences via Smartlead"
 
-# Phone SDR — 10 AM to 12 PM ET daily (outbound calls to A-leads via Retell AI)
-0 10 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/phone-sdr "Call A-leads from yesterday via Retell AI. Prioritize warm leads who opened emails. Log outcomes to GHL CRM."
+# Phone SDR — 10 AM to 12 PM ET daily (outbound calls to A-leads via CallHub + Retell AI)
+0 10 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/phone-sdr "Call A-leads from yesterday via CallHub + Retell AI. Prioritize warm leads who opened emails. Log outcomes to GHL CRM."
 
-# Text SDR — 12 PM ET daily (iMessage/SMS follow-ups via Sendblue)
-0 12 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/text-sdr "Evaluate iMessage availability via Sendblue, send messages to A+B leads who haven't replied to email (Day 3, Day 7). iMessage first, SMS/RCS fallback. Log to GHL CRM."
+# Text SDR — 12 PM ET daily (outbound SMS via CallHub, inbound handling via Sendblue)
+0 12 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/text-sdr "Send outbound SMS to A+B leads who haven't replied to email (Day 3, Day 7) via CallHub. Check Sendblue for inbound replies. Log to GHL CRM."
 
 # Sequence Manager — Every 2 hours during business hours (orchestration)
-0 8,10,12,14,16 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Deduplicate, sync to GHL CRM, check Sendblue read receipts, check for hot leads, monitor Smartlead webhooks for speed-to-lead triggers"
+0 8,10,12,14,16 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Deduplicate, sync to GHL CRM, check Sendblue for inbound replies + read receipts, check CallHub for call/SMS delivery, check for hot leads, monitor Smartlead webhooks for speed-to-lead triggers"
 
 # Sequence Manager — 5 PM ET daily (daily report)
-0 17 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Generate daily SDR report. Post to Slack #sdr. Update GHL dashboard. Include iMessage/SMS metrics from Sendblue. Check for hot leads to hand off."
+0 17 * * 1-5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Generate daily SDR report. Post to Slack #sdr. Update GHL dashboard. Include CallHub call/SMS metrics + Sendblue inbound metrics. Check for hot leads to hand off."
 
 # Sequence Manager — Friday 6 PM ET (weekly self-improvement)
-0 18 * * 5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Weekly self-improvement: analyze A/B results from all channels (Smartlead, Retell, Sendblue), update SOUL.md files, log improvements, report to Co-Founder"
+0 18 * * 5 cd ~/openclaw-workspace && openclaw run agents/sequence-manager "Weekly self-improvement: analyze A/B results from all channels (Smartlead, CallHub, Retell, Sendblue), update SOUL.md files, log improvements, report to Co-Founder"
